@@ -1,9 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { services } from "../data";
 
-export default function ServicesSection() {
+export default function ServicesSection({ services = [] }) {
     return (
         <div
             style={{

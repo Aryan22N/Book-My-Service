@@ -1,8 +1,8 @@
 "use client";
 
-import { professional } from "../data";
+export default function AboutSection({ professional }) {
+    if (!professional) return null;
 
-export default function AboutSection() {
     return (
         <div
             style={{

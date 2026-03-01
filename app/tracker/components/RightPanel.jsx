@@ -1,9 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { bookingDetails, locationInfo } from "../data";
 
-export default function RightPanel() {
+export default function RightPanel({ locationInfo = {}, bookingDetails = [] }) {
     const [mapHovered, setMapHovered] = useState(false);
 
     return (

@@ -1,9 +1,11 @@
 "use client";
 
 import Link from "next/link";
-import { navLinks, currentUser } from "../data";
+import { navLinks } from "../data";
 
-export default function TrackerHeader() {
+export default function TrackerHeader({ currentUser }) {
+    if (!currentUser) return null;
+
     return (
         <header
             style={{

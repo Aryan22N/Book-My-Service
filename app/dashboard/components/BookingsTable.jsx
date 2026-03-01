@@ -1,8 +1,6 @@
 "use client";
 
-import { recentBookings } from "../data";
-
-export default function BookingsTable() {
+export default function BookingsTable({ recentBookings = [] }) {
     return (
         <section style={{ display: "flex", flexDirection: "column", gap: "1.25rem" }}>
             {/* Section header */}

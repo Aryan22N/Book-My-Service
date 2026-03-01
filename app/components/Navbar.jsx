@@ -7,7 +7,10 @@ export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
 
+  const [mounted, setMounted] = useState(false);
+
   useEffect(() => {
+    setMounted(true);
     const handleScroll = () => setScrolled(window.scrollY > 10);
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
@@ -21,11 +24,11 @@ export default function Navbar() {
         zIndex: 50,
         width: "100%",
         borderBottom: "1px solid #e2e8f0",
-        backgroundColor: scrolled ? "rgba(255,255,255,0.95)" : "rgba(255,255,255,0.9)",
+        backgroundColor: mounted && scrolled ? "rgba(255,255,255,0.95)" : "rgba(255,255,255,0.9)",
         backdropFilter: "blur(20px)",
         WebkitBackdropFilter: "blur(20px)",
         transition: "all 0.3s ease",
-        boxShadow: scrolled ? "0 1px 24px 0 rgba(67,56,202,0.07)" : "none",
+        boxShadow: mounted && scrolled ? "0 1px 24px 0 rgba(67,56,202,0.07)" : "none",
       }}
     >
       <div
@@ -93,7 +96,7 @@ export default function Navbar() {
         {/* CTA Buttons */}
         <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
           <Link
-            href="#"
+            href="/login"
             style={{
               fontSize: "0.875rem",
               fontWeight: 600,
@@ -105,7 +108,8 @@ export default function Navbar() {
           >
             Log In
           </Link>
-          <button
+          <Link
+            href="/signup"
             style={{
               display: "flex",
               height: "2.75rem",
@@ -117,6 +121,7 @@ export default function Navbar() {
               fontSize: "0.875rem",
               fontWeight: 700,
               color: "white",
+              textDecoration: "none",
               border: "none",
               cursor: "pointer",
               transition: "all 0.2s ease",
@@ -133,7 +138,7 @@ export default function Navbar() {
             }}
           >
             Join Network
-          </button>
+          </Link>
 
           {/* Mobile hamburger */}
           <button
@@ -167,7 +172,7 @@ export default function Navbar() {
             gap: "1rem",
           }}
         >
-          {["Find Talent", "Project Gallery", "Enterprise", "Log In"].map((item) => (
+          {["Find Talent", "Project Gallery", "Enterprise"].map((item) => (
             <Link
               key={item}
               href="#"
@@ -183,6 +188,32 @@ export default function Navbar() {
               {item}
             </Link>
           ))}
+          <Link
+            href="/login"
+            style={{
+              fontSize: "0.875rem",
+              fontWeight: 600,
+              color: "#64748b",
+              textDecoration: "none",
+              padding: "0.5rem 0",
+              borderBottom: "1px solid #f1f5f9",
+            }}
+          >
+            Log In
+          </Link>
+          <Link
+            href="/signup"
+            style={{
+              fontSize: "0.875rem",
+              fontWeight: 600,
+              color: "#4338ca",
+              textDecoration: "none",
+              padding: "0.5rem 0",
+              borderBottom: "1px solid #f1f5f9",
+            }}
+          >
+            Sign Up
+          </Link>
         </div>
       )}
 

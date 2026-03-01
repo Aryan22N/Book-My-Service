@@ -5,6 +5,7 @@ import RecentProjectsSection from "./components/RecentProjectsSection";
 import HowItWorksSection from "./components/HowItWorksSection";
 import TopProfessionalsSection from "./components/TopProfessionalsSection";
 import Footer from "./components/Footer";
+import LandingPageStyles from "./components/LandingPageStyles";
 
 export const metadata = {
   title: "ServiceLink – Turn Your Vision Into Reality",
@@ -33,6 +34,7 @@ export default function Home() {
         <TopProfessionalsSection />
       </main>
       <Footer />
+      <LandingPageStyles />
     </div>
   );
 }

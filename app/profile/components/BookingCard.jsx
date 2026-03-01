@@ -1,8 +1,8 @@
 "use client";
 
-import { professional } from "../data";
+export default function BookingCard({ professional }) {
+    if (!professional) return null;
 
-export default function BookingCard() {
     return (
         <div
             style={{

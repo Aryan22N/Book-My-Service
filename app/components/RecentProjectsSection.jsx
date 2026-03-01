@@ -1,27 +1,20 @@
-"use client";
+// RecentProjectsSection — Server Component
+// Fetches from featured_projects table in Supabase.
+// Run 002_landing_page_tables.sql in the Supabase SQL Editor first.
+import { createClient } from "@/lib/supabase/server";
 
-const projects = [
-    {
-        image: "https://lh3.googleusercontent.com/aida-public/AB6AXuBPLu8VIs47av9Gx4evGABFTweZvFe7zCJhhnriuvguGXgwl3npAub-T5C5kJZ198sClYGvaIP_SOi6q-k5D2ipMuIfBhJKhpXoCkUqGKGHmDL3N3VXgVzsKRC6Xxf-iPX6uOwX5vUbvj_zgvplkZBJ1cfYHst10tAnyNMyYPdK19WKiK3Axw7kaZ70HvgSV2R0yKJ6-ZiHa-M7YR5KVBxB1s6b877cm2aVk18MNxUU9ONph4xWYrnmj70iJf3bP5fRiAQZi0MJrn0m",
-        badge: "After",
-        badgeColor: "#000000b3",
-        title: "Modern Kitchen Renovation",
-        subtitle: "Completed by David Rossi • 3 weeks duration",
-        budget: "$15k – $20k",
-        location: "Portland, OR",
-    },
-    {
-        image: "https://lh3.googleusercontent.com/aida-public/AB6AXuCf6iiH3WJPYzR10i_z3qc9YaLUDJHqAg5aENnTMRhLjvCvWYbsS32rLEvYjqGD0T6NU0vmjM1xOR0bMuRoNhbGsuRcD_x41Mm3o3Hu0Feyr8Ba3E-VDI4r_gKbGXdIi3TYj36w8uFQwV9Sxale7Awz59dgpxnPtq675L5PfLRxQg7SYHOXtmxhmpVV8d_pbmIEM1TtmxlOgrq24MHHw6Blc6wq7kvBhIMGzpFjwbrGYl2W-hJ1w6LUQRdm29l7ArpH2oz7ldlokYd4",
-        badge: "In Progress",
-        badgeColor: "#000000b3",
-        title: "Commercial Wiring Upgrade",
-        subtitle: "Led by Michael Chen • 1 week remaining",
-        budget: "$8k – $12k",
-        location: "Seattle, WA",
-    },
-];
+export default async function RecentProjectsSection() {
+    const supabase = await createClient();
 
-export default function RecentProjectsSection() {
+    const { data: projects, error } = await supabase
+        .from("featured_projects")
+        .select("id, title, subtitle, badge, image_url, budget, location")
+        .eq("is_active", true)
+        .order("sort_order", { ascending: true })
+        .limit(2);
+
+    const items = error || !projects ? [] : projects;
+
     return (
         <section
             style={{
@@ -66,19 +59,20 @@ export default function RecentProjectsSection() {
                     }}
                     className="projects-grid"
                 >
-                    {projects.map((project) => (
-                        <ProjectCard key={project.title} {...project} />
+                    {items.map((project) => (
+                        <ProjectCard
+                            key={project.id}
+                            image={project.image_url}
+                            badge={project.badge}
+                            title={project.title}
+                            subtitle={project.subtitle}
+                            budget={project.budget}
+                            location={project.location}
+                        />
                     ))}
                 </div>
             </div>
 
-            <style jsx>{`
-        @media (max-width: 1024px) {
-          .projects-grid {
-            grid-template-columns: 1fr !important;
-          }
-        }
-      `}</style>
         </section>
     );
 }
@@ -145,7 +139,14 @@ function ProjectCard({ image, badge, title, subtitle, budget, location }) {
                         right: "1.5rem",
                     }}
                 >
-                    <h3 style={{ fontSize: "1.5rem", fontWeight: 700, color: "white", marginBottom: "0.25rem" }}>
+                    <h3
+                        style={{
+                            fontSize: "1.5rem",
+                            fontWeight: 700,
+                            color: "white",
+                            marginBottom: "0.25rem",
+                        }}
+                    >
                         {title}
                     </h3>
                     <p style={{ fontSize: "0.875rem", color: "#cbd5e1" }}>{subtitle}</p>
@@ -162,13 +163,31 @@ function ProjectCard({ image, badge, title, subtitle, budget, location }) {
                 }}
             >
                 <div>
-                    <p style={{ fontSize: "0.7rem", fontWeight: 600, color: "#64748b", textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: "0.25rem" }}>
+                    <p
+                        style={{
+                            fontSize: "0.7rem",
+                            fontWeight: 600,
+                            color: "#64748b",
+                            textTransform: "uppercase",
+                            letterSpacing: "0.05em",
+                            marginBottom: "0.25rem",
+                        }}
+                    >
                         Budget
                     </p>
                     <p style={{ fontWeight: 700, color: "#0f172a" }}>{budget}</p>
                 </div>
                 <div>
-                    <p style={{ fontSize: "0.7rem", fontWeight: 600, color: "#64748b", textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: "0.25rem" }}>
+                    <p
+                        style={{
+                            fontSize: "0.7rem",
+                            fontWeight: 600,
+                            color: "#64748b",
+                            textTransform: "uppercase",
+                            letterSpacing: "0.05em",
+                            marginBottom: "0.25rem",
+                        }}
+                    >
                         Location
                     </p>
                     <p style={{ fontWeight: 700, color: "#0f172a" }}>{location}</p>
@@ -187,14 +206,6 @@ function ProjectCard({ image, badge, title, subtitle, budget, location }) {
                         cursor: "pointer",
                         transition: "all 0.2s ease",
                     }}
-                    onMouseEnter={(e) => {
-                        e.currentTarget.style.background = "#4338ca";
-                        e.currentTarget.style.color = "white";
-                    }}
-                    onMouseLeave={(e) => {
-                        e.currentTarget.style.background = "#f8fafc";
-                        e.currentTarget.style.color = "#4338ca";
-                    }}
                 >
                     <span className="material-symbols-outlined" style={{ fontSize: "1.1rem" }}>
                         arrow_outward
@@ -202,14 +213,6 @@ function ProjectCard({ image, badge, title, subtitle, budget, location }) {
                 </button>
             </div>
 
-            <style jsx>{`
-        .project-card:hover .project-img {
-          transform: scale(1.05);
-        }
-        .project-card:hover {
-          box-shadow: 0 20px 60px rgba(0,0,0,0.12);
-        }
-      `}</style>
         </div>
     );
 }

@@ -1,12 +1,13 @@
 "use client";
 
 import { useState } from "react";
-import { calendarData, timeSlots } from "../data";
+import { calendarData } from "../data";
 
-export default function DateTimePicker() {
+export default function DateTimePicker({ timeSlots = [] }) {
     const [selectedDay, setSelectedDay] = useState(calendarData.defaultSelectedDay);
+    const defaultSlotId = timeSlots.find((s) => s.defaultSelected)?.id;
     const [selectedSlot, setSelectedSlot] = useState(
-        timeSlots.find((s) => s.defaultSelected)?.id || timeSlots[0].id
+        defaultSlotId || (timeSlots.length > 0 ? timeSlots[0].id : null)
     );
 
     return (

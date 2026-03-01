@@ -1,9 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { serviceCategories } from "../data";
 
-export default function ServiceGrid() {
+export default function ServiceGrid({ categories = [] }) {
     return (
         <>
             {/* Grid */}
@@ -15,7 +14,7 @@ export default function ServiceGrid() {
                 }}
                 className="service-grid"
             >
-                {serviceCategories.map((service) => (
+                {categories.map((service) => (
                     <ServiceCard key={service.id} service={service} />
                 ))}
             </div>

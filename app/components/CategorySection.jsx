@@ -1,52 +1,69 @@
-"use client";
+// CategorySection — Server Component
+// Fetches service_categories from Supabase (already seeded with 8 rows).
+// UI color/icon properties are mapped from slug on the frontend
+// since those are display-only constants that don't belong in the DB.
+import { createClient } from "@/lib/supabase/server";
 
-const categories = [
-    {
+// Map: service_categories.slug → landing page UI colours + icon name
+const CATEGORY_UI = {
+    "home-cleaning": {
         icon: "cleaning_services",
-        title: "Cleaning",
-        subtitle: "Residential & Commercial",
         color: "#2563eb",
         bgColor: "#dbeafe",
-        hoverBg: "rgba(219,234,254,0.5)",
-        count: "120+ Pros",
     },
-    {
+    plumbing: {
         icon: "plumbing",
-        title: "Plumbing",
-        subtitle: "Installation & Repair",
         color: "#0891b2",
         bgColor: "#cffafe",
-        hoverBg: "rgba(207,250,254,0.5)",
-        count: "85+ Pros",
     },
-    {
+    electrical: {
         icon: "bolt",
-        title: "Electrical",
-        subtitle: "Certified Electricians",
         color: "#d97706",
         bgColor: "#fef3c7",
-        hoverBg: "rgba(254,243,199,0.5)",
-        count: "90+ Pros",
     },
-    {
-        icon: "spa",
-        title: "Wellness",
-        subtitle: "Personal Care Services",
-        color: "#db2777",
-        bgColor: "#fce7f3",
-        hoverBg: "rgba(252,231,243,0.5)",
-        count: "60+ Pros",
+    "ac-servicing": {
+        icon: "ac_unit",
+        color: "#16a34a",
+        bgColor: "#dcfce7",
     },
-];
+    painting: {
+        icon: "format_paint",
+        color: "#9333ea",
+        bgColor: "#f3e8ff",
+    },
+    carpentry: {
+        icon: "carpenter",
+        color: "#c026d3",
+        bgColor: "#fae8ff",
+    },
+    "pest-control": {
+        icon: "pest_control",
+        color: "#dc2626",
+        bgColor: "#fee2e2",
+    },
+    "appliance-repair": {
+        icon: "home_repair_service",
+        color: "#ca8a04",
+        bgColor: "#fef9c3",
+    },
+};
 
-export default function CategorySection() {
+export default async function CategorySection() {
+    const supabase = await createClient();
+
+    // Fetch top 4 active categories ordered by display_order
+    const { data: categories, error } = await supabase
+        .from("service_categories")
+        .select("id, name, slug, description")
+        .eq("is_active", true)
+        .order("display_order", { ascending: true })
+        .limit(4);
+
+    // Graceful fallback on error
+    const items = error || !categories ? [] : categories;
+
     return (
-        <section
-            style={{
-                padding: "5rem 0",
-                background: "#f8fafc",
-            }}
-        >
+        <section style={{ padding: "5rem 0", background: "#f8fafc" }}>
             <div style={{ margin: "0 auto", maxWidth: "80rem", padding: "0 2rem" }}>
                 {/* Header */}
                 <div
@@ -76,7 +93,7 @@ export default function CategorySection() {
                         </p>
                     </div>
                     <a
-                        href="#"
+                        href="/explore"
                         style={{
                             display: "inline-flex",
                             alignItems: "center",
@@ -85,7 +102,6 @@ export default function CategorySection() {
                             fontWeight: 700,
                             color: "#4338ca",
                             textDecoration: "none",
-                            transition: "color 0.2s",
                         }}
                     >
                         Explore all services{" "}
@@ -104,32 +120,34 @@ export default function CategorySection() {
                     }}
                     className="category-grid"
                 >
-                    {categories.map((cat) => (
-                        <CategoryCard key={cat.title} {...cat} />
-                    ))}
+                    {items.map((cat) => {
+                        const ui = CATEGORY_UI[cat.slug] ?? {
+                            icon: "home_repair_service",
+                            color: "#4338ca",
+                            bgColor: "#e0e7ff",
+                        };
+                        return (
+                            <CategoryCard
+                                key={cat.id}
+                                icon={ui.icon}
+                                title={cat.name}
+                                subtitle={cat.description}
+                                color={ui.color}
+                                bgColor={ui.bgColor}
+                            />
+                        );
+                    })}
                 </div>
             </div>
 
-            <style jsx>{`
-        @media (max-width: 1024px) {
-          .category-grid {
-            grid-template-columns: repeat(2, 1fr) !important;
-          }
-        }
-        @media (max-width: 640px) {
-          .category-grid {
-            grid-template-columns: 1fr !important;
-          }
-        }
-      `}</style>
         </section>
     );
 }
 
-function CategoryCard({ icon, title, subtitle, color, bgColor, hoverBg, count }) {
+function CategoryCard({ icon, title, subtitle, color, bgColor }) {
     return (
         <a
-            href="#"
+            href="/explore"
             style={{
                 position: "relative",
                 display: "flex",
@@ -144,19 +162,8 @@ function CategoryCard({ icon, title, subtitle, color, bgColor, hoverBg, count })
                 transition: "all 0.3s ease",
                 border: "1px solid #f1f5f9",
             }}
-            onMouseEnter={(e) => {
-                e.currentTarget.style.transform = "translateY(-8px)";
-                e.currentTarget.style.boxShadow = "0 20px 60px rgba(0,0,0,0.12)";
-                e.currentTarget.style.borderColor = "#e0e7ff";
-            }}
-            onMouseLeave={(e) => {
-                e.currentTarget.style.transform = "translateY(0)";
-                e.currentTarget.style.boxShadow = "0 1px 3px rgba(0,0,0,0.06)";
-                e.currentTarget.style.borderColor = "#f1f5f9";
-            }}
         >
             <div>
-                {/* Icon */}
                 <div
                     style={{
                         marginBottom: "1.5rem",
@@ -168,22 +175,23 @@ function CategoryCard({ icon, title, subtitle, color, bgColor, hoverBg, count })
                         borderRadius: "0.875rem",
                         background: bgColor,
                         color: color,
-                        transition: "transform 0.3s ease",
                     }}
                 >
                     <span className="material-symbols-outlined" style={{ fontSize: "1.75rem" }}>
                         {icon}
                     </span>
                 </div>
-
-                <h3 style={{ marginBottom: "0.5rem", fontSize: "1.25rem", fontWeight: 700, color: "#0f172a" }}>
+                <h3
+                    style={{
+                        marginBottom: "0.5rem",
+                        fontSize: "1.25rem",
+                        fontWeight: 700,
+                        color: "#0f172a",
+                    }}
+                >
                     {title}
                 </h3>
                 <p style={{ fontSize: "0.875rem", color: "#64748b" }}>{subtitle}</p>
-            </div>
-
-            <div style={{ marginTop: "1rem" }}>
-                <span style={{ fontSize: "0.75rem", fontWeight: 700, color: color }}>{count}</span>
             </div>
         </a>
     );

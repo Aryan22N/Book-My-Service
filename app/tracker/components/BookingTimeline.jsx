@@ -1,8 +1,8 @@
 "use client";
 
-import { timelineSteps } from "../data";
+export default function BookingTimeline({ timelineSteps = [] }) {
+    if (!timelineSteps.length) return null;
 
-export default function BookingTimeline() {
     return (
         <div
             style={{

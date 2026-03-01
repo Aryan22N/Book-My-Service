@@ -1,8 +1,6 @@
 "use client";
 
-import { bookingService, pricingBreakdown } from "../data";
-
-export default function BookingSummary() {
+export default function BookingSummary({ bookingService, pricingBreakdown }) {
     const p = pricingBreakdown;
 
     return (
@@ -46,7 +44,7 @@ export default function BookingSummary() {
                         <h4 style={{ fontWeight: 600, color: "#111318", fontSize: "0.9375rem" }}>{bookingService.name}</h4>
                         <p style={{ fontSize: "0.875rem", color: "#64748b" }}>{bookingService.description}</p>
                         <p style={{ fontSize: "0.875rem", fontWeight: 500, color: "#135bec", marginTop: "0.25rem" }}>
-                            ${bookingService.price.toFixed(2)}
+                            ₹{bookingService.price.toLocaleString("en-IN")}
                         </p>
                     </div>
                 </div>
@@ -71,9 +69,9 @@ export default function BookingSummary() {
                         gap: "0.75rem",
                     }}
                 >
-                    <PriceRow label="Subtotal" value={`$${p.subtotal.toFixed(2)}`} />
-                    <PriceRow label="Service Fee" value={`$${p.serviceFee.toFixed(2)}`} />
-                    <PriceRow label={`Taxes (${(p.taxRate * 100).toFixed(0)}%)`} value={`$${p.tax.toFixed(2)}`} />
+                    <PriceRow label="Subtotal" value={`₹${p.subtotal.toLocaleString("en-IN")}`} />
+                    <PriceRow label="Service Fee" value={`₹${p.serviceFee.toLocaleString("en-IN")}`} />
+                    <PriceRow label={`GST (${(p.taxRate * 100).toFixed(0)}%)`} value={`₹${p.tax.toLocaleString("en-IN")}`} />
 
                     <div
                         style={{
@@ -86,7 +84,7 @@ export default function BookingSummary() {
                     >
                         <span style={{ fontSize: "1rem", fontWeight: 700, color: "#111318" }}>Total</span>
                         <span style={{ fontSize: "1.25rem", fontWeight: 700, color: "#135bec" }}>
-                            ${p.total.toFixed(2)}
+                            ₹{p.total.toLocaleString("en-IN")}
                         </span>
                     </div>
                 </div>

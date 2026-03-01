@@ -1,9 +1,9 @@
 "use client";
 
 import Link from "next/link";
-import { currentUser, navLinks } from "../data";
+import { navLinks } from "../data";
 
-export default function Sidebar() {
+export default function Sidebar({ currentUser }) {
     return (
         <aside
             style={{

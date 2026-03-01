@@ -1,8 +1,8 @@
 "use client";
 
-import { professional } from "../data";
+export default function ProfileHeroCard({ professional }) {
+    if (!professional) return null;
 
-export default function ProfileHeroCard() {
     return (
         <div
             style={{
@@ -49,7 +49,7 @@ export default function ProfileHeroCard() {
                                     letterSpacing: "-0.015em",
                                 }}
                             >
-                                {professional.name}
+                                {professional.full_name}
                             </h1>
                             {professional.verified && (
                                 <span

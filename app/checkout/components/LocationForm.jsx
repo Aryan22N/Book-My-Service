@@ -1,9 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import { locationFields, stateOptions } from "../data";
+import { locationFields } from "../data";
 
-export default function LocationForm() {
+export default function LocationForm({ areaOptions = [] }) {
     const [values, setValues] = useState({});
 
     const handleChange = (id, val) =>
@@ -119,7 +119,7 @@ export default function LocationForm() {
                     {/* State select (special — not easily abstracted) */}
                     <div>
                         <label style={{ display: "block", fontSize: "0.875rem", fontWeight: 500, color: "#111318", marginBottom: "0.5rem" }}>
-                            State
+                            Area / Locality
                         </label>
                         <select
                             style={{
@@ -144,7 +144,7 @@ export default function LocationForm() {
                                 e.currentTarget.style.boxShadow = "none";
                             }}
                         >
-                            {stateOptions.map((opt) => (
+                            {areaOptions.map((opt) => (
                                 <option key={opt}>{opt}</option>
                             ))}
                         </select>

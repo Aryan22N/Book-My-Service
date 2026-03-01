@@ -1,8 +1,8 @@
 "use client";
 
-import { booking } from "../data";
+export default function ServiceCard({ booking }) {
+    if (!booking) return null;
 
-export default function ServiceCard() {
     return (
         <div
             style={{

@@ -1,8 +1,6 @@
 "use client";
 
-import { statCards } from "../data";
-
-export default function StatCards() {
+export default function StatCards({ statCards = [] }) {
     return (
         <section
             style={{

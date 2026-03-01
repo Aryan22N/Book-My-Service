@@ -23,8 +23,10 @@ function StarRow({ count, filled }) {
     );
 }
 
-export default function ReviewsSection() {
+export default function ReviewsSection({ reviews = [], ratingBreakdown = null }) {
     const rb = ratingBreakdown;
+
+    if (!rb) return null;
 
     return (
         <div
